@@ -1,0 +1,80 @@
+<!--https://angular.cn/docs/ts/latest/guide/forms.html-->
+
+<!--template 视图-->
+<div class="container">
+  <div  [hidden]="submitted">
+    <h1>Hero Form</h1>
+    <!--事件绑定 -->
+    <!--结构型指令-->
+    <form *ngIf="active" (ngSubmit)="onSubmit()" #heroForm="ngForm">
+      <!--这个 heroForm 变量现在引用的是 NgForm 指令，它代表的是表单的整体-->
+      <!--Angular 替我们做了。 Angular 自动创建了 NgForm 指令，并且把它附加到 <form> 标签上-->
+      {{diagnostic}}
+      <div class="form-group">
+        <label for="name">Name</label>
+        <!--ngModel 指令就是属性型指令的一个例子，它实现了双向数据绑定。-->
+        <!--它修改了现有元素 ( 一般是 <input>) 的行为：它设置了显示属性值，并对 change 事件做出相应回应-->
+        <input type="text"  class="form-control" required [(ngModel)]="modelXX.name" name="name" #spy1 #nameXX="ngModel">
+        <!--<input type="text" class="form-control" required
+          [ngModel]="modelXX.name"
+          (ngModelChange)="modelXX.name = $event" name="name" #spy1 #name="ngModel">-->
+        
+        <!--属性绑定-->
+        <div [hidden]="nameXX.valid || nameXX.pristine" class="alert alert-danger">
+          <!--这个范例中，当控件是有效或全新 (pristine) 的时，我们要隐藏消息-->
+          Name is required<br/>
+          <!--Why "ngModel"? A directive's exportAs property tells Angular how to link the 
+          reference variable to the directive. We set name to ngModel because the ngModel 
+          directive's exportAs property happens to be "ngModel".-->
+        </div>
+
+        <!--插值表达式-->
+        <h4>name: {{modelXX.name}}</h4><br/>
+        <h4>class: {{spy1.className}}</h4><br/>
+
+        诊断信息是一个证据，用来表明数据从输入框流动到模型，再反向流动回来的过程。 这就是双向数据绑定！<br/>
+        <br/>
+        <!--双向数据绑定-->
+        [(ngModel)]<br/>
+        在属性绑定中，一个值从模型中传到屏幕上的目标属性。 我们通过把名字括在方括号中来标记出目标属性， [] 。 这是一个 从模型到视图 的单向数据绑定。<br/>
+        在事件绑定中，值从屏幕上的目标属性传到模型中。 我们通过把名字括在圆括号中来标记出目标属性， () 。 这是一个 从视图到模型 的反向单向数据绑定。<br/>
+        不出所料， Angular 选择了组合标点 [()] 来标记出双向数据绑定和双向数据流。<br/>
+        <br/>
+        ngModelChange 并不是 input 元素的事件。 它实际上是一个来自 ngModel 指令的事件属性。 <br/>
+        当 Angular 在表单中看到一个 [(x)] 的绑定目标时， 它会期待这个 x 指令有一个名为 x 的输入属性，和一个名为 xChange 的输出属性。<br/>
+        模板表达式中的另一个古怪之处是 model.name = $event 。 我们以前看到的 $event 变量是来自 DOM 事件的。<br/> 
+        但 ngModelChange 属性不会生成 DOM 事件——它是一个 Angular EventEmitter 类型的属性，当它触发时， 它返回的是输入框的值——它恰好和我们希望赋给模型上 name 属性的值一样。<br/>
+      </div>
+      <div class="form-group">
+        <label for="alterEgo">Alter Ego</label>
+        <input type="text"  class="form-control" [(ngModel)]="modelXX.alterEgo" name="alterEgo"  #spy2>
+        <h4>class: {{spy1.className}}</h4><br/>
+      </div>
+      <div class="form-group">
+        <label for="power">Hero Power</label>
+        <select class="form-control" required [(ngModel)]="modelXX.power" name="power">
+          <option *ngFor="let p of powers" [value]="p">{{p}}</option>
+        </select>
+      </div>
+      <button type="button" class="btn btn-default" (click)="newHero()">New Hero</button>
+      <button type="submit" class="btn btn-default" [disabled]="!heroForm.form.valid">Submit</button>
+    </form>
+  </div>
+  <div [hidden]="!submitted">
+    <h2>You submitted the following:</h2>
+    <div class="row">
+      <div class="col-xs-3">Name</div>
+      <div class="col-xs-9  pull-left">{{ modelXX.name }}</div>
+    </div>
+    <div class="row">
+      <div class="col-xs-3">Alter Ego</div>
+      <div class="col-xs-9 pull-left">{{ modelXX.alterEgo }}</div>
+    </div>
+    <div class="row">
+      <div class="col-xs-3">Power</div>
+      <div class="col-xs-9 pull-left">{{ modelXX.power }}</div>
+    </div>
+    <br>
+    <button class="btn btn-default" (click)="submitted=false">Edit</button>
+  </div>
+</div>
